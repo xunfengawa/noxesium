@@ -41,6 +41,12 @@ public class ServerNoxesiumRegistry<T> extends NoxesiumRegistry<T> {
 
     @Override
     public <V extends T> V register(Key key, V value, @Nullable NoxesiumEntrypoint entrypoint) {
+        Key existingKey = valueToKey.get(value);
+        if (existingKey != null) {
+            throw new IllegalArgumentException("Cannot register identical value under different key: " + key
+                    + " (already registered under " + existingKey + ")");
+        }
+
         super.register(key, value, entrypoint);
 
         // Don't re-register if the value is already included!
